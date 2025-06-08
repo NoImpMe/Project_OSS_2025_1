@@ -19,7 +19,7 @@ class Calculator:
             ['4', '5', '6', '*'],
             ['1', '2', '3', '-'],
             ['0', '.', 'C', '+'],
-            ['=']
+            ['=', 'P']
         ]
 
         for row in buttons:
@@ -37,6 +37,12 @@ class Calculator:
     def on_click(self, char):
         if char == 'C':
             self.expression = ""
+        elif char == 'P':
+            try:
+                number = int(eval(self.expression))
+                self.expression = str(self.prime_factor(number))
+            except Exception:
+                self.expression = "에러"
         elif char == '=':
             try:
                 self.expression = str(eval(self.expression))
@@ -48,5 +54,15 @@ class Calculator:
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.expression)
 
+    def prime_factor(self, number):
+        result = []
+        n = 2
+        while number > 1:
+            while number % n == 0:
+                result.append(n)
+                number //= n
+            n += 1
+        return result
+ 
 
 
