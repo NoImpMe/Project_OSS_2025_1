@@ -1,11 +1,11 @@
 import tkinter as tk
-
+import math
 
 class Calculator:
     def __init__(self, root):
         self.root = root
         self.root.title("계산기")
-        self.root.geometry("300x400")
+        self.root.geometry("500x550")
 
         self.expression = ""
 
@@ -19,7 +19,7 @@ class Calculator:
             ['4', '5', '6', '*'],
             ['1', '2', '3', '-'],
             ['0', '.', 'C', '+'],
-            ['=']
+            ['=',',', '등수']
         ]
 
         for row in buttons:
@@ -37,6 +37,12 @@ class Calculator:
     def on_click(self, char):
         if char == 'C':
             self.expression = ""
+        elif char == '등수':
+            try:
+                self.expression = self.rank_calc(self.expression)
+                
+            except Exception:
+                self.expression = "입력 : 점수,평균,표준편차,총 인원"
         elif char == '=':
             try:
                 self.expression = str(eval(self.expression))
@@ -47,6 +53,15 @@ class Calculator:
 
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.expression)
-
-
-
+        
+    def rank_calc(self, parts):
+        part = list(map(float, parts.split(',')))
+        if len(part) != 4:
+            return "입력 : 점수,평균,표준편차,총 인원"
+        score, mean, stddev, total = part
+        if stddev <= 0:
+            return "표준편차 는 0보다 큰 수 입니다."
+        z = (score - mean) / stddev
+        percent = 0.5 * ( 1 + math.erf(z / math.sqrt(2)))
+        rank = math.ceil((1 - percent) * total)
+        return f"상위 {round(percent*100, 2)}%, 예상 등수 : {rank}등"
