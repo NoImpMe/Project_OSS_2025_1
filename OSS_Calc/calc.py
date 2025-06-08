@@ -19,7 +19,7 @@ class Calculator:
             ['4', '5', '6', '*'],
             ['1', '2', '3', '-'],
             ['0', '.', 'C', '+'],
-            ['=']
+            ['=', ',', 'BMI']
         ]
 
         for row in buttons:
@@ -37,6 +37,11 @@ class Calculator:
     def on_click(self, char):
         if char == 'C':
             self.expression = ""
+        elif char =='BMI':
+            try:
+                self.expression = self.bmi_calc(self.expression)
+            except Exception:
+                self.expression = "입력: 키(cm),몸무게"
         elif char == '=':
             try:
                 self.expression = str(eval(self.expression))
@@ -48,5 +53,27 @@ class Calculator:
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.expression)
 
+    def bmi_calc(self, input):
+        
+        height, weight = map(float, input.split(','))
+        
+        if height <= 0 or weight <= 0:
+            return "키 몸무게 입력 오류."
+        
+        height = height / 100
+        bmi = weight / ( height ** 2 )
+        bmi = round(bmi, 2)
 
+        if bmi < 18.5:
+            result = "저체중"
+        elif bmi < 23:
+            result = "정상"
+        elif bmi < 25:
+            result = "과제충"
+        elif bmi < 30:
+            result = "비만"
+        else :
+            result = "고도비만"
 
+        return f"BMI= {bmi}, {result}"
+    
